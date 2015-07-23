@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use Validator;
 use App\Models\User;
-use Request;
+use Illuminate\Http\Request;
 use Crypt;
-use App\Http\Requests\RegisterRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -36,21 +35,37 @@ class AuthController extends Controller
         $this->middleware('guest', ['except' => 'getLogout']);
     }
 
-    public function getRegister()
+    /**
+     *
+     * validate register
+     *
+     */
+    public function registerValidator($inputs)
     {
-        return view('user.register');
+        return Validator::make(
+            $inputs,
+            [
+                'email'            => ['required', 'min:8'],
+                'username'         => ['required'],
+                'password'         => ['required', 'min:6' ,'max:20'],
+                'password-confirm' => ['required', 'min:6' ,'max:20']
+            ]
+        );
     }
 
-
-    public function postRegister(RegisterRequest $request)
+    public function postRegister(Request $request)
     {
-        $user = User::create([
-            'email' => $request->input('email'),
-            'username' => $request->input('username'),
-            'password' => Crypt::encrypt($request->input('password'))
-        ]);
+        $validator = $this->registerValidator($request->all());
 
-        return 'success';
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        Auth::login($this->create($request->all()));
+
+        return redirect($this->redirectPath());
     }
 
 

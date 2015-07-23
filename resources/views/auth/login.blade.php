@@ -15,7 +15,7 @@
                     <h3 class="panel-title">Please Login</h3>
                 </div>
                 <div class="panel-body">
-                    <form role="form" method="post" action="/user">
+                    <form role="form" method="post" action="login">
                         <fieldset>
                             @if (Session::has('message'))
                             <div class="form-group">
