@@ -47,8 +47,7 @@ class AuthController extends Controller
             [
                 'email'            => ['required', 'min:8'],
                 'username'         => ['required'],
-                'password'         => ['required', 'min:6' ,'max:20'],
-                'password-confirm' => ['required', 'min:6' ,'max:20']
+                'password'         => ['required',['confirmed']]
             ]
         );
     }

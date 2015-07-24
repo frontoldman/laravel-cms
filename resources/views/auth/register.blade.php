@@ -40,7 +40,7 @@
                                 {!! FORM::password('password', array('class'=>'form-control','placeholder'=>'password')) !!}
                             </div>
                             <div class="form-group">
-                                {!! FORM::password('passwordConfirm', array('class'=>'form-control','placeholder'=>'passwordConfirm')) !!}
+                                {!! FORM::password('password_confirmation', array('class'=>'form-control','placeholder'=>'passwordConfirm')) !!}
                             </div>
                                 {!! FORM::submit('注册', array('class'=>'btn btn-lg btn-success btn-block')) !!}
                         </fieldset>
