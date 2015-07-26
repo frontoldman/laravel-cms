@@ -15,34 +15,30 @@
                     <h3 class="panel-title">Please Login</h3>
                 </div>
                 <div class="panel-body">
-                    <form role="form" method="post" action="login">
-                        <fieldset>
-                            @if (Session::has('message'))
+                    {!! FORM::open(array('action' => 'Auth\AuthController@postLogin','method' => 'post','novalidate','role' => 'form')) !!}
+                    <fieldset>
+                        @if ($errors->has())
                             <div class="form-group">
-                                <div class="alert alert-danger" role="alert">
-                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                    <span class="sr-only">Error:</span>
-                                    {!! Session::get('message') !!}
-                                </div>
+                                @foreach ($errors->all() as $error)
+                                    <div class="alert alert-danger" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        <span class="sr-only">Error:</span>
+                                        {!! $error !!}
+                                    </div>
+                                @endforeach
                             </div>
-                            @endif
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        @endif
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                            <div class="form-group">
-                                <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
-                            </div>
-                            <div class="form-group">
-                                <input class="form-control" placeholder="Password" name="password" type="password"
-                                       value="">
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="checkbox" checked name="remember" value="remember"> 记住我
-                                </label>
-                            </div>
-                            <button class="btn btn-lg btn-success btn-block">登陆</button>
-                        </fieldset>
-                    </form>
+                        <div class="form-group">
+                            {!! FORM::email('email', @$email,array('class'=>'form-control','placeholder'=>'E-mail','autofocus')) !!}
+                        </div>
+                        <div class="form-group">
+                            {!! FORM::password('password', array('class'=>'form-control','placeholder'=>'password')) !!}
+                        </div>
+                        {!! FORM::submit('登陆', array('class'=>'btn btn-lg btn-success btn-block')) !!}
+                    </fieldset>
+                    {!! FORM::close() !!}
                 </div>
             </div>
         </div>

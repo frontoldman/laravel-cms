@@ -16,6 +16,8 @@ class CreateUesrTable extends Migration
             $table->increments('id');
             $table->string('username', 30)->unique();
             $table->string('email')->unique();
+            $table->string('confirm_code');
+            $table->boolean('confirmed')->default(false);
             $table->string('password', 60);
             $table->rememberToken();
             $table->timestamps();

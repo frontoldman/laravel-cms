@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use Validator;
-use App\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Auth\Guard;
 use Crypt;
+use App\Jobs\sendMail;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -25,14 +27,15 @@ class AuthController extends Controller
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
+    protected $redirectAfterLogout = '/home';
+
     /**
-     * Create a new authentication controller instance.
-     *
-     *
+     * @param UserRepository $userRepository
      */
-    public function __construct()
+    public function __construct(UserRepository $userRepository)
     {
         $this->middleware('guest', ['except' => 'getLogout']);
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -45,15 +48,22 @@ class AuthController extends Controller
         return Validator::make(
             $inputs,
             [
-                'email'            => ['required', 'min:8'],
-                'username'         => ['required'],
+                'email'            => ['required', 'email'],
+                'username'         => ['required','min:8'],
                 'password'         => ['required',['confirmed']]
             ]
         );
     }
 
+    /**
+     * 注册新用户
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function postRegister(Request $request)
     {
+
         $validator = $this->registerValidator($request->all());
 
         if ($validator->fails()) {
@@ -62,10 +72,102 @@ class AuthController extends Controller
             );
         }
 
-        Auth::login($this->create($request->all()));
+        $inputs = $request->all();
+        $confirmationCode = str_random(30);
+
+        $user = $this->userRepository->store($inputs,$confirmationCode);
+
+        $this->dispatch(new SendMail($user));
+
+       // Auth::login($this->create($request->all()));
 
         return redirect($this->redirectPath());
     }
 
+    /**
+     *  验证新用户
+     *
+     *
+     */
+    public function getConfirm($code)
+    {
+
+        $user = $this->userRepository->confirm($code);
+
+        if($user){
+            return '成功';
+        }else{
+            return '认证失败';
+        }
+
+    }
+
+
+    public function loginValidator($inputs)
+    {
+        return Validator::make(
+            $inputs,
+            [
+                'email' => 'required|email',
+                'password' => 'required'
+            ]
+        );
+    }
+
+    /**
+     *  登陆
+     *
+     * @param Request $request
+     * @param Guard $auth
+     */
+    public  function postLogin(Request $request,Guard $auth)
+    {
+
+        $validator = $this->loginValidator($request->all());
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        $credentials = [
+            'email' => $request->input('email'),
+            'password' => $request->input('password')
+        ];
+
+        if(!$auth->validate($credentials)){
+            return redirect('/auth/login')
+                ->withErrors([
+                    $this->loginUsername() => $this->getFailedLoginMessage(),
+                ])
+                ->withInput($request->only('email'));
+        }
+
+        $user = $auth->getLastAttempted();
+
+        if($user->confirmed) {
+            $auth->login($user, $request->has('memory'));
+
+            if($request->session()->has('user_id'))	{
+                $request->session()->forget('user_id');
+            }
+
+            return redirect('/home');
+        }
+
+        $request->session()->put('user_id', $user->id);
+
+        return redirect('/auth/login')->with('error', '请重新验证');
+
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getFailedLoginMessage(){
+        return '用户名或者密码错误！';
+    }
 
 }
