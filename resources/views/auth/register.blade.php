@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-    {!! HTML::style('styles/bootstrap.min.css') !!}
-</head>
-<body>
+@extends('layouts.front')
 
-<div class="container">
+@section('container')
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="login-panel panel panel-default"  style="margin-top: 50px;">
@@ -49,7 +42,4 @@
             </div>
         </div>
     </div>
-</div>
-
-</body>
-</html>
+@stop

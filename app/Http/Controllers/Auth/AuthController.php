@@ -95,7 +95,7 @@ class AuthController extends Controller
         $user = $this->userRepository->confirm($code);
 
         if($user){
-            return '成功';
+            return redirect('/auth/login')->with('error', '认证成功');
         }else{
             return '认证失败';
         }
@@ -115,10 +115,9 @@ class AuthController extends Controller
     }
 
     /**
-     *  登陆
-     *
      * @param Request $request
      * @param Guard $auth
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public  function postLogin(Request $request,Guard $auth)
     {
@@ -145,6 +144,8 @@ class AuthController extends Controller
         }
 
         $user = $auth->getLastAttempted();
+
+
 
         if($user->confirmed) {
             $auth->login($user, $request->has('memory'));

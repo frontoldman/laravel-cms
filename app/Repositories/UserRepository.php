@@ -43,9 +43,8 @@ class UserRepository extends BaseRepository
 
     public function confirm($code)
     {
-        //dd($code);
 
-        $user = $this->model->whereConfirmCode($code);
+        $user = $this->model->whereConfirmCode($code)->first();
 
         if($user)
         {
@@ -53,7 +52,6 @@ class UserRepository extends BaseRepository
             $user->confirm_code = null;
             $user->save();
         }
-
 
         return $user;
     }

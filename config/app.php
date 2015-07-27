@@ -138,6 +138,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Illuminate\Html\HtmlServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
 
         /*
@@ -195,7 +196,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
         'HTML'      => 'Illuminate\Html\HtmlFacade',
-        'FORM'      => 'Illuminate\Html\FormFacade'
+        'FORM'      => 'Illuminate\Html\FormFacade',
+        'Debugbar'  => 'Barryvdh\Debugbar\Facade'
 
     ],
 

@@ -5,10 +5,10 @@
         <div class="col-md-4 col-md-offset-4">
             <div class="login-panel panel panel-default"  style="margin-top: 50px;">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Please Login</h3>
+                    <h3 class="panel-title">重置密码</h3>
                 </div>
                 <div class="panel-body">
-                    {!! FORM::open(array('action' => 'Auth\AuthController@postLogin','method' => 'post','novalidate','role' => 'form')) !!}
+                    {!! FORM::open(array('action' => 'Auth\PasswordController@postReset','method' => 'post','novalidate','role' => 'form')) !!}
                     <fieldset>
                         @if ($errors->has())
                             <div class="form-group">
@@ -21,7 +21,7 @@
                                 @endforeach
                             </div>
                         @endif
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            {!! Form::hidden('token', $token) !!}
 
                         <div class="form-group">
                             {!! FORM::email('email', @$email,array('class'=>'form-control','placeholder'=>'E-mail','autofocus')) !!}
@@ -30,10 +30,7 @@
                             {!! FORM::password('password', array('class'=>'form-control','placeholder'=>'password')) !!}
                         </div>
                         <div class="form-group">
-                            {!! FORM::checkbox('memory','value',true) !!}记住我
-                        </div>
-                        <div class="form-group">
-                            {!! link_to('/password/email', '忘记密码？点我找回') !!}
+                            {!! FORM::password('password_confirmation', array('class'=>'form-control','placeholder'=>'passwordConfirm')) !!}
                         </div>
                         {!! FORM::submit('登陆', array('class'=>'btn btn-lg btn-success btn-block')) !!}
                     </fieldset>
