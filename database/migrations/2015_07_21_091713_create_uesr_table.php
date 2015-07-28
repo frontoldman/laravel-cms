@@ -19,6 +19,7 @@ class CreateUesrTable extends Migration
             $table->string('confirm_code');
             $table->boolean('confirmed')->default(false);
             $table->string('password', 60);
+            $table->integer('role_id')->unsigned();
             $table->rememberToken();
             $table->timestamps();
         });
