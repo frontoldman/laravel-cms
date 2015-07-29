@@ -35,6 +35,7 @@ class UserRepository extends BaseRepository
         $user->email = $inputs['email'];
         $user->password = bcrypt($inputs['password']);
         $user->confirm_code = $confirmationCode;
+        $user->role_id = 3;
         $user->save();
 
         return $user;
