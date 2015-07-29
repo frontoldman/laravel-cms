@@ -11,9 +11,15 @@
 |
 */
 
+Route::get('/',function(){
+   return redirect('/home');
+});
+
 Route::get('/home', function () {
     return view('welcome');
 });
+
+Route::get('/admin','AdminController@index');
 
 Route::controllers([
    'auth' => 'Auth\AuthController',
