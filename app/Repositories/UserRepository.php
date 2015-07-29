@@ -56,4 +56,11 @@ class UserRepository extends BaseRepository
 
         return $user;
     }
+
+    public function getAllByRole($role_id){
+
+        $users = $this->model->where('role_id','>=',$role_id)->get();
+
+        return $users;
+    }
 }

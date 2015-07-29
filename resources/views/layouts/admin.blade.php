@@ -39,7 +39,7 @@
                         <li><a href="#">角色</a></li>
                     </ul>
                 </li>
-                <li role="presentation"><a href="#">Messages</a></li>
+                <li role="presentation"><a href="#">文章</a></li>
             </ul>
 
         </div>
