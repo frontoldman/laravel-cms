@@ -2,12 +2,25 @@
 
 @section('container')
 
-    @foreach ($users as $user)
-        <div class="alert alert-danger" role="alert">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            {!! $user->username !!}
-        </div>
-    @endforeach
+    <table class="table">
+        <tbody>
+        @foreach ($users as $user)
+            <tr>
+                <td>{!! $user->email !!}</td>
+                <td>{!! $user->username !!}</td>
+                <td>{!! $user->confirmed !!}</td>
+                <td>{!! $user->role->title !!}</td>
+                <td>{!! $user->created_at !!}</td>
+                <td>{!! $user->updated_at !!}</td>
+                <td>
+                    <a class="btn btn-default" href="#">编辑</a>
+                </td>
+                <td>
+                    <a class="btn btn-default" href="#">删除</a>
+                </td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
 
 @stop

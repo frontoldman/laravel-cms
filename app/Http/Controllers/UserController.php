@@ -35,6 +35,8 @@ class UserController extends Controller
         //
         $users = $this->userRepository->getAllByRole($this->auth->user()->role_id);
 
+
+
         return view('admin.userlist',compact('users'));
 
     }
