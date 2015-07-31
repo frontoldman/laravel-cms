@@ -12,6 +12,12 @@ class UserRepository extends BaseRepository
      */
     protected $model;
 
+
+    /**
+     * @var 默认roleId
+     */
+    protected $roleId = 3;
+
     /**
      * @param User $user
      */
@@ -19,6 +25,12 @@ class UserRepository extends BaseRepository
     {
         $this->model = $user;
 
+    }
+
+
+    public function getById($id)
+    {
+        return $this->model->find($id);
     }
 
     /**
@@ -35,7 +47,7 @@ class UserRepository extends BaseRepository
         $user->email = $inputs['email'];
         $user->password = bcrypt($inputs['password']);
         $user->confirm_code = $confirmationCode;
-        $user->role_id = 3;
+        $user->role_id = $this->roleId;
         $user->save();
 
         return $user;
@@ -44,23 +56,37 @@ class UserRepository extends BaseRepository
 
     public function confirm($code)
     {
-
         $user = $this->model->whereConfirmCode($code)->first();
-
         if($user)
         {
             $user->confirmed = true;
             $user->confirm_code = null;
             $user->save();
         }
-
         return $user;
     }
 
-    public function getAllByRole($role_id){
-
-        $users = $this->model->where('role_id','>=',$role_id)->get();
-
+    public function getAllByRole($role_id)
+    {
+        $users = $this->model->with('role')->where('role_id','>=',$role_id)->get();
         return $users;
+    }
+
+    /**
+     * @param $inputs
+     */
+    public function update($id,$inputs)
+    {
+
+        $user = $this->model->find($id);
+
+        if($user){
+            $user->email = $inputs['email'];
+            $user->username = $inputs['username'];
+            $user->role_id = $inputs['role_id'];
+            $user->save();
+        }
+
+        return $user;
     }
 }
