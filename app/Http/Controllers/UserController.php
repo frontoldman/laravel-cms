@@ -174,6 +174,15 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = $this->userRepository->delete($id);
+
+        if($user){
+            return redirect('/admin/user')->with('ok','删除成功');
+        }else{
+            return redirect('/admin/user')->withErrors([
+                'message' => '删除失败'
+            ]);
+        }
+
     }
 }

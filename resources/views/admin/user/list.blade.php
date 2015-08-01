@@ -46,7 +46,11 @@
                     <a class="btn btn-default" href="{{ action('UserController@edit',$user->id)}}">编辑</a>
                 </td>
                 <td>
-                    <a class="btn btn-default" href="#">删除</a>
+                    @if($user->id != auth()->user()->id)
+                        {!! FORM::open(['method' => 'DELETE', 'action' => ['UserController@destroy', $user->id]]) !!}
+                        {!! FORM::submit('删除',['class'=>'btn btn-danger']) !!}
+                        {!! FORM::close() !!}
+                    @endif
                 </td>
             </tr>
         @endforeach

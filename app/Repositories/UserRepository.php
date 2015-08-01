@@ -40,13 +40,6 @@ class UserRepository extends BaseRepository
      */
     public function store($inputs)
     {
-//        $user = new $this->model;
-//        $user->username = $inputs['username'];
-//        $user->email = $inputs['email'];
-//        $user->password = bcrypt($inputs['password']);
-//        $user->confirm_code = $confirmationCode;
-//        $user->role_id = $role_id;
-//        $user->save();
 
         $inputs['password'] = bcrypt($inputs['password']);
         $inputs['confirmationCode'] = str_random(30);
@@ -91,6 +84,14 @@ class UserRepository extends BaseRepository
         }
 
         return $user;
+    }
+
+
+    public function delete($id)
+    {
+
+        return $this->model->destroy($id);
+
     }
 
 }

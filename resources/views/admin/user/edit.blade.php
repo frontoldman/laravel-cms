@@ -20,8 +20,6 @@
                 @endif
             </div>
 
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
             <div class="form-group col-sm-12">
                 <div class="col-sm-3 text-right">
                     {!! FORM::label('email','邮箱') !!}
