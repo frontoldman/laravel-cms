@@ -35,7 +35,7 @@
                     {!! FORM::label('username','用户名') !!}
                 </div>
                 <div class="col-sm-6">
-                    {!! FORM::email('username', @$username,array('class'=>'form-control','placeholder'=>'用户名'))
+                    {!! FORM::text('username', @$username,array('class'=>'form-control','placeholder'=>'用户名'))
                     !!}
                 </div>
             </div>

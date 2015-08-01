@@ -20,6 +20,17 @@ class RoleRepository extends BaseRepository
         $this->model = $role;
     }
 
+
+    /**
+     * 获取所有的role
+     *
+     * @return mixed
+     */
+    public function getAllClear()
+    {
+        return $this->model->get();
+    }
+
     /**
      * @return mixed
      */
@@ -38,6 +49,15 @@ class RoleRepository extends BaseRepository
     }
 
 
+    public function update($inputs)
+    {
+        foreach ($inputs as $key => $value)
+        {
+            $this->model->where('slug',$key)->update([
+                'title' => $value
+            ]);
 
+        }
+    }
 
 }
