@@ -28,6 +28,15 @@ class RoleRepository extends BaseRepository
         return $this->model->get()->lists('title', 'id');
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getLowsById($id)
+    {
+        return $this->model->where('id','>=',$id)->get()->lists('title', 'id');
+    }
+
 
 
 

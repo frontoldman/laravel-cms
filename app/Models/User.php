@@ -23,6 +23,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $hidden = ['password', 'remember_token'];
 
 
+    protected $fillable = ['email','username','password','role_id','confirm_code'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

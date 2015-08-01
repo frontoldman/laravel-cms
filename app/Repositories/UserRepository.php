@@ -33,22 +33,25 @@ class UserRepository extends BaseRepository
         return $this->model->find($id);
     }
 
+
     /**
-     * 存储用户
-     *
-     * @param $inputs
-     * @param $confirmationCode
-     * @return mixed
+     * @param Array $inputs
+     * @return static
      */
-    public function store($inputs,$confirmationCode)
+    public function store($inputs)
     {
-        $user = new $this->model;
-        $user->username = $inputs['username'];
-        $user->email = $inputs['email'];
-        $user->password = bcrypt($inputs['password']);
-        $user->confirm_code = $confirmationCode;
-        $user->role_id = $this->roleId;
-        $user->save();
+//        $user = new $this->model;
+//        $user->username = $inputs['username'];
+//        $user->email = $inputs['email'];
+//        $user->password = bcrypt($inputs['password']);
+//        $user->confirm_code = $confirmationCode;
+//        $user->role_id = $role_id;
+//        $user->save();
+
+        $inputs['password'] = bcrypt($inputs['password']);
+        $inputs['confirmationCode'] = str_random(30);
+
+        $user = $this->model->create($inputs);
 
         return $user;
     }
@@ -89,4 +92,5 @@ class UserRepository extends BaseRepository
 
         return $user;
     }
+
 }

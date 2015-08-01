@@ -34,8 +34,8 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a href="#">所有用户</a></li>
-                        <li><a href="#">添加</a></li>
+                        <li><a href="{{ action('UserController@index') }}">所有用户</a></li>
+                        <li><a href="{{ action('UserController@create') }}">添加</a></li>
                         <li><a href="#">角色</a></li>
                     </ul>
                 </li>

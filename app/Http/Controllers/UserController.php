@@ -9,6 +9,7 @@ use App\Repositories\UserRepository;
 use App\Repositories\RoleRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
+use App\Jobs\sendMail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
@@ -51,18 +52,56 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+
+        $roles = $this->roleRepository->getLowsById($this->auth->user()->id);
+
+        return view('admin.user.create',compact('roles'));
 
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
+     * @param Request $request
      */
-    public function store()
+    public function store(Request $request)
     {
-        //
+
+        $inputs = $request->all();
+        $validator = $this->addValidate($inputs);
+        if($validator->fails()){
+            $this->throwValidationException($request, $validator);
+        }
+
+        $inputs = $request->all();
+
+        $user = $this->userRepository->store($inputs);
+
+        $this->dispatch(new SendMail($user));
+
+        // Auth::login($this->create($request->all()));
+
+        if($user){
+            return redirect('/admin/user')->with('ok','添加成功');
+        }else{
+            return redirect()->to($this->getRedirectUrl())
+                ->withInput($request->input())
+                ->withErrors([
+                    'message' => '添加失败'
+                ]);
+        }
+
+    }
+
+    /**
+     * @param $inputs
+     * @return mixed
+     */
+    private function addValidate($inputs)
+    {
+        return Validator::make($inputs, [
+            'email'            => ['required', 'email'],
+            'username'         => ['required','min:8'],
+            'password'         => ['required',['confirmed']]
+        ]);
     }
 
     /**
@@ -84,9 +123,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
         $user = $this->userRepository->getById($id);
-        $roles = $this->roleRepository->getAll();
+        $roles = $this->roleRepository->getLowsById($this->auth->user()->id);
         return view('admin.user.edit',compact('user','roles'));
     }
 
@@ -110,9 +148,10 @@ class UserController extends Controller
         if($user){
             return redirect('/admin/user')->with('ok','更新成功');
         }else{
-            return redirect('/admin/user')->withErrors([
-                'message' => '更新失败'
-            ]);
+            return redirect()->to($this->getRedirectUrl())
+                            ->withErrors([
+                            'message' => '更新失败'
+                        ]);
         }
 
     }

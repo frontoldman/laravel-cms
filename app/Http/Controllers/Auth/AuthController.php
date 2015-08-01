@@ -73,9 +73,10 @@ class AuthController extends Controller
         }
 
         $inputs = $request->all();
-        $confirmationCode = str_random(30);
+        $inputs['role_id'] = 3;
 
-        $user = $this->userRepository->store($inputs,$confirmationCode);
+
+        $user = $this->userRepository->store($inputs);
 
         $this->dispatch(new SendMail($user));
 
