@@ -42,9 +42,7 @@ class RoleController extends Controller
     }
 
 
-    /**
-     * @param Request $request
-     */
+
     public function postRole(Request $request)
     {
 
@@ -54,7 +52,7 @@ class RoleController extends Controller
             $this->throwValidationException($request, $validator);
         }
 
-        $roles = $this->roleRepository->update($request->except('_token'));
+        $this->roleRepository->update($request->except('_token'));
 
         return redirect('/admin/user')->with('ok','更新角色成功');
 

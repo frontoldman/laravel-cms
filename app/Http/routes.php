@@ -11,21 +11,23 @@
 |
 */
 
-Route::get('/',function(){
-   return redirect('/home');
+Route::get('/', function () {
+    return redirect('/home');
 });
 
 Route::get('/home', function () {
     return view('welcome');
 });
 
-Route::get('/admin','AdminController@index');
+Route::get('/admin', 'AdminController@index');
 
 Route::resource('/admin/user', 'UserController');
 
-Route::controller('/admin','RoleController');
+Route::resource('/admin/post', 'PostController');
+
+Route::controller('/admin', 'RoleController');
 
 Route::controllers([
-   'auth' => 'Auth\AuthController',
-   'password' => 'Auth\PasswordController'
+    'auth' => 'Auth\AuthController',
+    'password' => 'Auth\PasswordController'
 ]);
