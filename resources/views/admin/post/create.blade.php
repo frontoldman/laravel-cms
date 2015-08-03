@@ -77,6 +77,16 @@
                 </div>
             </div>
 
+            <div class="form-group col-sm-12">
+                <div class="col-sm-6">
+                    {!! FORM::label('tags','标签') !!}
+                </div>
+                <div class="col-sm-12">
+                    {!! FORM::text('tags', @$tags,array('class'=>'form-control','placeholder'=>'标签'))
+                    !!}
+                </div>
+            </div>
+
 
             <div class="form-group col-sm-12">
                 <div class="col-sm-3 text-right">

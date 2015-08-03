@@ -27,7 +27,9 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = $this->postRepository->getAllByUserId($this->auth->user()->id);
+
+        return view('admin.post.list',compact('posts'));
     }
 
     /**
