@@ -21,11 +21,15 @@ Route::get('/home', function () {
 
 Route::get('/admin', 'AdminController@index');
 
+Route::get('/post','PostController@indexFront');
+
 Route::resource('/admin/user', 'UserController');
 
 Route::resource('/admin/post', 'PostController');
 
 Route::controller('/admin', 'RoleController');
+
+
 
 Route::controllers([
     'auth' => 'Auth\AuthController',

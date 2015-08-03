@@ -16,6 +16,7 @@ class PostController extends Controller
 
     public function __construct(PostRepository $postRepository,Guard $auth)
     {
+        $this->middleware('admin');
         $this->postRepository = $postRepository;
         $this->auth = $auth;
     }
@@ -29,6 +30,18 @@ class PostController extends Controller
     {
         $posts = $this->postRepository->getAllByUserId($this->auth->user()->id);
         return view('admin.post.list',compact('posts'));
+    }
+
+
+    /**
+     *
+     *  前台页面bloglist
+     *
+     */
+    public function indexFront()
+    {
+        $posts = $this->postRepository->getAll();
+        return view('front.list',compact('posts'));
     }
 
     /**
@@ -164,5 +177,17 @@ class PostController extends Controller
     public function destroy($id)
     {
         //
+        $post = $this->postRepository->delete($id);
+
+        if($post){
+            return redirect()->to($this->getRedirectUrl())
+                ->with('ok','删除成功');
+        }else{
+            return redirect()->to($this->getRedirectUrl())
+                ->withErrors([
+                    'message' => '删除失败'
+                ]);
+        }
+
     }
 }

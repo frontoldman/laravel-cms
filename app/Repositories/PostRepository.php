@@ -48,6 +48,19 @@ class PostRepository extends BaseRepository
     }
 
 
+    public function getAll()
+    {
+        $posts = $this->model->with('user')->where('active','=',true)->get();
+
+        return $posts;
+    }
+
+    /**
+     * 根据userId 获取post
+     *
+     * @param $id
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function getAllByUserId($id)
     {
         $posts = Post::with('user')->where('user_id','=',$id)->get();
@@ -117,7 +130,13 @@ class PostRepository extends BaseRepository
 
     public function delete($id)
     {
-        return $this->model->destroy($id);
+        $model = $this->model->find($id);
+
+        $model->tags()->detach();
+
+        $model->delete();
+
+        return $model;
 
     }
 
