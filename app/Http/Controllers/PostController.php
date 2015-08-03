@@ -44,6 +44,11 @@ class PostController extends Controller
         return view('front.list',compact('posts'));
     }
 
+    public function link($id)
+    {
+        return $id;
+    }
+
     /**
      * Show the form for creating a new resource.
      *

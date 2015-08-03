@@ -23,6 +23,8 @@ Route::get('/admin', 'AdminController@index');
 
 Route::get('/post','PostController@indexFront');
 
+Route::get('/post/{link}','PostController@link');
+
 Route::resource('/admin/user', 'UserController');
 
 Route::resource('/admin/post', 'PostController');
