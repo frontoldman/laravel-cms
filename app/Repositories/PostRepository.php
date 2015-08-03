@@ -37,6 +37,7 @@ class PostRepository extends BaseRepository
     public function getAllByUserId($id)
     {
         $posts = Post::with('user')->where('user_id','=',$id)->get();
+
         return $posts;
     }
 
@@ -46,7 +47,17 @@ class PostRepository extends BaseRepository
      */
     public function store($inputs)
     {
+
+
+
         $user = $this->model->create($inputs);
+
+        $tags = explode(',',$inputs['tags']);
+        $count = count($tags);
+        if($count){
+
+        }
+
         return $user;
     }
 

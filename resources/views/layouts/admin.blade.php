@@ -29,17 +29,26 @@
             <ul class="nav nav-pills nav-stacked nav-pills-stacked-example">
                 <li role="presentation" class="active"><a href="#">主页</a></li>
                 <li role="presentation">
-                    <a href="#" class="dropdown-toggle"  id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <a href="{{ action('UserController@index') }}" class="dropdown-toggle"  id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         用户
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <li><a href="{{ action('UserController@index') }}">所有用户</a></li>
                         <li><a href="{{ action('UserController@create') }}">添加</a></li>
-                        <li><a href="#">角色</a></li>
+                        <li><a href="{{ action('RoleController@getRole') }}">角色</a></li>
                     </ul>
                 </li>
-                <li role="presentation"><a href="#">文章</a></li>
+                <li role="presentation">
+                    <a href="{{ action('PostController@index') }}" class="dropdown-toggle"  id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        文章
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="{{ action('PostController@index') }}">所有文章</a></li>
+                        <li><a href="{{ action('PostController@create') }}">添加</a></li>
+                    </ul>
+                </li>
             </ul>
 
         </div>
