@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Post;
+use App\Models\Tag;
 
 class PostRepository extends BaseRepository
 {
@@ -14,11 +15,13 @@ class PostRepository extends BaseRepository
 
 
     /**
-     * @param $post $post
+     * @param Post $post
+     * @param Tag $tag
      */
-    public function __construct(Post $post)
+    public function __construct(Post $post,Tag $tag)
     {
         $this->model = $post;
+        $this->tag = $tag;
     }
 
 
@@ -30,14 +33,24 @@ class PostRepository extends BaseRepository
      */
     public function getById($id)
     {
-        return $this->model->find($id);
+        $post = $this->model->with('tags')->find($id);
+
+        $tags = [];
+
+        foreach($post->tags as $tag) {
+            array_push($tags, $tag->tag);
+        }
+
+        return [
+            'post' => $post,
+            'tags'  => $tags
+        ];
     }
 
 
     public function getAllByUserId($id)
     {
         $posts = Post::with('user')->where('user_id','=',$id)->get();
-
         return $posts;
     }
 
@@ -47,18 +60,25 @@ class PostRepository extends BaseRepository
      */
     public function store($inputs)
     {
-
-
-
-        $user = $this->model->create($inputs);
+        $post = $this->model->create($inputs);
 
         $tags = explode(',',$inputs['tags']);
         $count = count($tags);
         if($count){
-
+            foreach($tags as $key => $value){
+                $tag = $this->tag->whereTag($value)->first();
+                if(is_null($tag)){
+                    $tag = new $this->tag;
+                    $tag->tag = $value;
+                    $tag->save();
+                    $post->tags()->save($tag);
+                }else{
+                    $post->tags()->attach($tag->id);
+                }
+            }
         }
 
-        return $user;
+        return $post;
     }
 
     /**
@@ -68,7 +88,30 @@ class PostRepository extends BaseRepository
      */
     public function update($id,$inputs)
     {
-        return '';
+        $post = $this->model->find($id);
+
+        $post->update($inputs);
+
+        $tag_ids = [];
+
+        if(isset($inputs['tags'])){
+            $tags = explode(',',$inputs['tags']);
+            foreach($tags as $key => $value){
+                $tag = $this->tag->whereTag($value)->first();
+                if(is_null($tag)){
+                    $tag = new $this->tag;
+                    $tag->tag = $value;
+                    $tag->save();
+                }
+                array_push($tag_ids,$tag->id);
+            }
+        }
+
+
+
+        $post->tags()->sync($tag_ids);
+
+        return $post;
     }
 
 

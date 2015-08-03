@@ -38,7 +38,6 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
         return view('admin.post.create');
     }
 
@@ -62,9 +61,13 @@ class PostController extends Controller
         $post = $this->postRepository->store($inputs);
 
         if($post){
-            return '保存成功';
+            return redirect('/admin/post')->with('ok','添加成功');
         }else{
-            return '保存失败';
+            return redirect()->to($this->getRedirectUrl())
+                ->withInput($request->input())
+                ->withErrors([
+                    'message' => '添加失败'
+                ]);
         }
 
 
@@ -106,18 +109,50 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $result = $this->postRepository->getById($id);
+
+        $post = $result['post'];
+        $tags = $result['tags'];
+
+        if(isset($tags)){
+            $tags = implode(',',$tags);
+        }
+
+        return view('admin.post.edit',compact('post','tags'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  int  $id
+     * @param  Request $request
      * @return Response
      */
-    public function update($id)
+    public function update($id,Request $request)
     {
-        //
+
+        $inputs = $request->all();
+
+        $validator = $this->addValidate($inputs);
+        if($validator->fails())
+        {
+            $this->throwValidationException($request, $validator);
+        }
+
+        $inputs['active'] = isset($inputs['active']);
+
+        $post = $this->postRepository->update($id,$inputs);
+
+        if($post){
+            return redirect('/admin/post')->with('ok','更新成功');
+        }else{
+            return redirect()->to($this->getRedirectUrl())
+                ->withInput($request->input())
+                ->withErrors([
+                    'message' => '更新失败'
+                ]);
+        }
+
     }
 
     /**
